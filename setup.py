@@ -265,5 +265,6 @@ setup(name = "gmpy2",
         'Topic :: Software Development :: Libraries :: Python Modules',
       ],
       cmdclass = my_commands,
-      ext_modules = [gmpy2_ext]
+      ext_modules = [gmpy2_ext],
+      headers=[os.path.join('src', 'gmpy2_mpz.h'), os.path.join('src', 'gmpy2_mpq.h')]
 )

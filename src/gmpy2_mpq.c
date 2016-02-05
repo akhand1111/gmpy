@@ -280,3 +280,24 @@ static PyTypeObject MPQ_Type =
     GMPy_MPQ_getseters,                     /* tp_getset        */
 };
 
+
+PyObject * GMPy_MPQ_from_mpq_ptr(mpq_srcptr m)
+{
+    CTXT_Object *context = NULL;
+    MPQ_Object *result = NULL;
+
+    CHECK_CONTEXT(context)
+    if ((result = GMPy_MPQ_New(context))) {
+        mpq_set(result->q, m);
+    }
+    return (PyObject*)result;
+}
+
+void GMPy_MPQ_get_mpq_ptr(mpq_ptr m, PyObject *obj)
+{
+    if (MPQ_Check(obj)) {
+        mpq_set(m, MPQ(obj));
+    }
+    return;
+}
+

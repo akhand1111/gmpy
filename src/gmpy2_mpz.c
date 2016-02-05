@@ -268,3 +268,24 @@ static PyTypeObject MPZ_Type =
     GMPy_MPZ_getseters,                        /* tp_getset        */
 };
 
+
+PyObject * GMPy_MPZ_from_mpz_ptr(mpz_srcptr m)
+{
+    CTXT_Object *context = NULL;
+    MPZ_Object *result = NULL;
+
+    CHECK_CONTEXT(context)
+    if ((result = GMPy_MPZ_New(context))) {
+        mpz_set(result->z, m);
+    }
+    return (PyObject*)result;
+}
+
+void GMPy_MPZ_get_mpz_ptr(mpz_ptr m, PyObject *obj)
+{
+    if (MPZ_Check(obj)) {
+        mpz_set(m, MPZ(obj));
+    }
+    return;
+}
+

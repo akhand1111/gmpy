@@ -45,6 +45,9 @@ static PyTypeObject MPZ_Type;
 
 static PyObject * GMPy_MPZ_Factory(PyObject *self, PyObject *args, PyObject *keywds);
 
+PyObject * GMPy_MPZ_from_mpz_ptr(mpz_srcptr m);
+void GMPy_MPZ_get_mpz_ptr(mpz_ptr m, PyObject *obj);
+
 #ifdef __cplusplus
 }
 #endif

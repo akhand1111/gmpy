@@ -45,6 +45,8 @@ static PyTypeObject MPQ_Type;
 
 static PyObject * GMPy_MPQ_Factory(PyObject *self, PyObject *args, PyObject *keywds);
 
+PyObject * GMPy_MPQ_from_mpq_ptr(mpq_srcptr m);
+void GMPy_MPQ_get_mpq_ptr(mpq_ptr m, PyObject *obj);
 #ifdef __cplusplus
 }
 #endif
