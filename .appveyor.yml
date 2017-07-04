@@ -2,20 +2,54 @@ environment:
 
   matrix:
     - TARGET_ARCH: x86
+      PYTHON_VERSION: 2.7
+      CONDA_INSTALL_LOCN: C:\\Miniconda27
+      BUILD_TYPE: MSYS
+
+    - TARGET_ARCH: x64
+      PYTHON_VERSION: 2.7
+      CONDA_INSTALL_LOCN: C:\\Miniconda27-x64
+      BUILD_TYPE: MSYS
+
+    - TARGET_ARCH: x86
       PYTHON_VERSION: 3.5
       CONDA_INSTALL_LOCN: C:\\Miniconda35
+      BUILD_TYPE: MSYS
 
     - TARGET_ARCH: x64
       PYTHON_VERSION: 3.5
       CONDA_INSTALL_LOCN: C:\\Miniconda35-x64
+      BUILD_TYPE: MSYS
 
     - TARGET_ARCH: x86
       PYTHON_VERSION: 3.6
       CONDA_INSTALL_LOCN: C:\\Miniconda36
+      BUILD_TYPE: MSYS
 
     - TARGET_ARCH: x64
       PYTHON_VERSION: 3.6
       CONDA_INSTALL_LOCN: C:\\Miniconda36-x64
+      BUILD_TYPE: MSYS
+
+    - TARGET_ARCH: x86
+      PYTHON_VERSION: 3.5
+      CONDA_INSTALL_LOCN: C:\\Miniconda35
+      BUILD_TYPE: MSVC
+
+    - TARGET_ARCH: x64
+      PYTHON_VERSION: 3.5
+      CONDA_INSTALL_LOCN: C:\\Miniconda35-x64
+      BUILD_TYPE: MSVC
+
+    - TARGET_ARCH: x86
+      PYTHON_VERSION: 3.6
+      CONDA_INSTALL_LOCN: C:\\Miniconda36
+      BUILD_TYPE: MSVC
+
+    - TARGET_ARCH: x64
+      PYTHON_VERSION: 3.6
+      CONDA_INSTALL_LOCN: C:\\Miniconda36-x64
+      BUILD_TYPE: MSVC
 
 platform:
     - x64
@@ -30,19 +64,14 @@ install:
     - cmd: conda config --set always_yes yes --set changeps1 no
 
     # Create conda environment
-    - cmd: conda create -n msvc_test python=%PYTHON_VERSION% mpir mpfr mpc
-    - cmd: conda create -n msys_test python=%PYTHON_VERSION% libpython m2w64-gmp m2w64-mpfr m2w64-mpc m2w64-toolchain
+    - cmd: if [%BUILD_TYPE%] == [%MSVC%] conda create -n test python=%PYTHON_VERSION% mpir mpfr mpc
+    - cmd: if [%BUILD_TYPE%] == [%MSYS%] conda create -n test python=%PYTHON_VERSION% libpython m2w64-gmp m2w64-mpfr m2w64-mpc m2w64-toolchain
 
 # Skip .NET project specific build phase.
 build: off
 
 test_script:
-    - cmd: echo "Testing MSYS build"
-    - cmd: call activate msys_test
-    - cmd: python setup.py install --static=%CONDA_PREFIX%\Library\mingw-w64 --msys2
-    - cmd: cd test && python runtests.py && cd ..
-
-    - cmd: echo "Testing MSVC build"
-    - cmd: call activate msvc_test
-    - cmd: python setup.py install --shared=%CONDA_PREFIX%\Library --mpir
+    - cmd: call activate test
+    - cmd: if [%BUILD_TYPE%] == [%MSVC%] python setup.py install --static=%CONDA_PREFIX%\Library\mingw-w64 --msys2 -DNDEBUG
+    - cmd: if [%BUILD_TYPE%] == [%MSYS%] python setup.py install --shared=%CONDA_PREFIX%\Library --mpir -DNDEBUG
     - cmd: cd test && python runtests.py && cd ..
