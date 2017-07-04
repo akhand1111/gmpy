@@ -72,6 +72,6 @@ build: off
 
 test_script:
     - cmd: call activate test
-    - cmd: if [%BUILD_TYPE%] == [MSVC] python setup.py install --static=%CONDA_PREFIX%\Library\mingw-w64 --msys2 -DNDEBUG
-    - cmd: if [%BUILD_TYPE%] == [MSYS] python setup.py install --shared=%CONDA_PREFIX%\Library --mpir -DNDEBUG
+    - cmd: if [%BUILD_TYPE%] == [MSVC] python setup.py build_ext --static=%CONDA_PREFIX%\Library\mingw-w64 --msys2 -DNDEBUG
+    - cmd: if [%BUILD_TYPE%] == [MSYS] python setup.py build_ext --shared=%CONDA_PREFIX%\Library --mpir -DNDEBUG
     - cmd: cd test && python runtests.py && cd ..
