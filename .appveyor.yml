@@ -30,12 +30,19 @@ install:
     - cmd: conda config --set always_yes yes --set changeps1 no
 
     # Create conda environment
-    - cmd: conda create -n test python=%PYTHON_VERSION% mpir mpfr mpc
-    - cmd: call activate test
+    - cmd: conda create -n msvc_test python=%PYTHON_VERSION% mpir mpfr mpc
+    - cmd: conda create -n msys_test python=%PYTHON_VERSION% libpython m2w64-gmp m2w64-mpfr m2w64-mpc m2w64-toolchain
 
 # Skip .NET project specific build phase.
 build: off
 
 test_script:
+    - cmd: echo "Testing MSYS build"
+    - cmd: call activate msys_test
+    - cmd: python setup.py install --static=%CONDA_PREFIX%\Library\mingw-w64 --msys2
+    - cmd: cd test && python runtests.py && cd ..
+
+    - cmd: echo "Testing MSVC build"
+    - cmd: call activate msvc_test
     - cmd: python setup.py install --shared=%CONDA_PREFIX%\Library --mpir
-    - cmd: cd test && python runtests.py
+    - cmd: cd test && python runtests.py && cd ..
