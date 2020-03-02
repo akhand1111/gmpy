@@ -55,6 +55,7 @@ build: off
 
 test_script:
     - cmd: python setup.py install build_ext --mpir -I%CONDA_PREFIX%\Library\include -L%CONDA_PREFIX%\Library\lib
+    - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
     - cmd: cd test && python runtests.py
     - cmd: cd ..
 
