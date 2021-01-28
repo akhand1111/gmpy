@@ -2,7 +2,14 @@ language: generic
 
 os:
   - linux
-  - osx
+
+arch:
+  - amd64
+  - arm64-graviton2
+
+virt: lxd
+
+group: edge
 
 osx_image: xcode6.4
 
